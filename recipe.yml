@@ -1,36 +1,34 @@
 name: torah-os
-description: "מערכת לימוד מוגנת - זית ואונלי אופיס"
-base: ghcr.io/vanilla-os/desktop:latest
+description: "Vanilla OS Orchid - Torah Edition"
+base: ghcr.io/vanilla-os/desktop:2
 
 stages:
   - name: customize
     modules:
       - type: shell
         commands:
-          # 1. התקנת תשתיות זמניות
+          # עדכון והתקנת כלים בסיסיים
           - apt update
           - apt install -y curl ca-certificates sed libfuse2
           
-          # 2. התקנת OnlyOffice
+          # התקנת OnlyOffice
           - apt install -y onlyoffice-desktopeditors
           
-          # 3. התקנת אפליקציית "זית" (טיפול ב-sudo ובשאלות אינטראקטיביות)
-          - curl -L https://zayitapp.com/download/launch.linux -o /tmp/zayit_install.sh
-          - sed -i 's/sudo //g' /tmp/zayit_install.sh
-          - chmod +x /tmp/zayit_install.sh
-          # הרצה ללא שאלות (yes) ותחת הגדרת ה-Frontend הלא-אינטראקטיבי
-          - DEBIAN_FRONTEND=noninteractive yes "" | bash /tmp/zayit_install.sh
+          # התקנת "זית" (הסרת sudo והרצה אוטומטית)
+          - curl -L https://zayitapp.com/download/launch.linux -o /tmp/install_zayit.sh
+          - sed -i 's/sudo //g' /tmp/install_zayit.sh
+          - chmod +x /tmp/install_zayit.sh
+          - DEBIAN_FRONTEND=noninteractive yes "" | bash /tmp/install_zayit.sh
           
-          # 4. נעילה הרמטית - הסרת טרמינל, רשת, דפדפן וכלים של ונילה
-          - apt purge -y gnome-terminal xterm network-manager net-tools iproute2 wpasupplicant wireless-tools firefox-esr gnome-software wget curl sed apx abroot
+          # נעילה: הסרת טרמינל, רשת ודפדפן
+          - apt purge -y gnome-terminal xterm network-manager firefox-esr wget curl apx abroot
           
-          # 5. ניקוי שאריות
+          # ניקוי שאריות
           - apt autoremove -y
-          - rm /tmp/zayit_install.sh
+          - rm /tmp/install_zayit.sh
 
       - type: shell
         commands:
-          # 6. ביטול הרשאות מנהל למשתמש ברירת המחדל
+          # ביטול הרשאות מנהל למשתמש vanilla ונעילת Root
           - delgroup vanilla sudo || true
-          # 7. נעילה מוחלטת של Root
           - passwd -l root

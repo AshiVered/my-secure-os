@@ -1,61 +1,34 @@
-name: Build Torah OS ISO
+name: Build Vanilla OS ISO
 on:
-  workflow_dispatch: # הפעלה ידנית
+  workflow_dispatch: # הפעלה ידנית בלשונית Actions
   push:
     branches: [ main ]
 
-env:
-  IMAGE_NAME: torah-os
-  REGISTRY: ghcr.io
+permissions:
+  contents: read
+  packages: write
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to GHCR
-        uses: docker/login-action@v3
+      - name: Build Image with Vib
+        # שימוש ב-Action הרשמי של ונילה
+        uses: Vanilla-OS/vib-action@v1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          recipe: 'recipe.yml'
+          tag: 'torah-os:latest'
 
-      - name: Build and Push Image (Vib)
-        run: |
-          # הרצת ה-Vib מתוך האימג' הרשמי של ונילה
-          docker run --privileged --rm \
-            -v .:/recipe \
-            -v /home/runner/.docker/config.json:/root/.docker/config.json \
-            -w /recipe \
-            ghcr.io/vanilla-os/vib:main \
-            build recipe.yml \
-            --tag ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
-            --push
+      - name: Generate ISO
+        # שימוש ב-Constructor הרשמי של ונילה
+        uses: Vanilla-OS/os-constructor-action@v1
+        with:
+          image: 'torah-os:latest'
 
-  generate-iso:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build ISO
-        run: |
-          # יצירת ה-ISO מתוך האימג' שהעלינו ל-Registry
-          docker run --privileged --rm \
-            -v .:/output \
-            ghcr.io/vanilla-os/os-constructor:main \
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-
-      - name: Upload ISO Artifact
+      - name: Upload ISO
         uses: actions/upload-artifact@v4
         with:
           name: Torah-OS-ISO
