@@ -1,0 +1,26 @@
+name: ashi-secure-os
+description: A completely hermetic, terminal-free, secure study system.
+base-image: fedora-kinoite:40
+
+modules:
+  - type: script
+    scripts:
+      - install-zayit.sh
+
+  - type: packages
+    install:
+      - fsearch
+      - onlyoffice-desktopeditors
+      - sayonara # נגן מוזיקה טהור בלבד
+    remove:
+      - firefox
+      - sudo
+      - konsole       # הסרת הטרמינל
+      - elisa-player  # הסרת נגן המדיה המובנה
+      - dragon        # הסרת נגן הוידאו
+      - kinfocenter   # הסרת מידע המערכת
+      - kernel-modules-extra # הסרת דרייברים נוספים (כולל Wi-Fi מסוים)
+
+  - type: script
+    scripts:
+      - hermetic-lock.sh

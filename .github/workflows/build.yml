@@ -1,0 +1,24 @@
+name: build-ashi-os
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # מאפשר להריץ בנייה ידנית בלחיצת כפתור
+
+jobs:
+  bluebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build Custom Image
+        uses: blue-build/github-action@v1
+        with:
+          recipe: recipes/recipe.yml
+          registry_token: ${{ github.token }}
+          prune: true
