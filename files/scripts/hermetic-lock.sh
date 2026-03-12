@@ -24,4 +24,15 @@ rm -f /usr/bin/nmtui
 
 # 4. נעילת Root מוחלטת
 passwd -l root
+# ==========================================
+# ביטול יכולות Sudo למשתמשים
+# ==========================================
+
+# 1. יצירת חוק שדורס את כל ההרשאות ומונע מכל משתמש להריץ כל פקודה כ-Sudo
+echo "ALL ALL=(ALL) !ALL" > /etc/sudoers.d/99-block-sudo
+chmod 0440 /etc/sudoers.d/99-block-sudo
+
+# 2. הסרת הרשאת ה-SUID מהקובץ הבינארי של Sudo (מונע מהתוכנה את היכולת הטכנית לשנות הרשאות)
+chmod a-s /usr/bin/sudo
+chmod a-s /usr/bin/su
 
