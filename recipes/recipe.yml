@@ -1,25 +1,56 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
-name: ashi-secure-os
-description: A completely hermetic, terminal-free, secure study system.
+name: roseiteos
+description: RoseiteOS - A completely hermetic, terminal-free, secure study system.
 base-image: ghcr.io/ublue-os/kinoite-main
 image-version: 43
 
 modules:
+  # שינוי השם והגרסה המוצגים במערכת
+  - type: os-release
+    name: RoseiteOS
+    pretty-name: RoseiteOS
+    version: 0.1
+
   - type: script
     scripts:
       - add-repos.sh
+
   - type: rpm-ostree
     install:
       - onlyoffice-desktopeditors
       - sayonara
     remove:
+      # התוכנות מהגרסאות הקודמות
       - firefox
-      - firefox-langpacks
-      - kinfocenter
+      - konsole
       - kernel-modules-extra
+      # העלמת כפתור הרשת
+      - plasma-nm 
+      # הסרות חדשות לפי השמות המדויקים בפדורה:
+      - plasma-discover
+      - ksystemlog
+      - kde-connect
+      - krfb
+      - kate
+      - kwrite
+      - firewall-config # אנחנו מסירים רק את ה-GUI של ה-Firewall, לא את מנוע הרשת כדי לא לשבור תלויות
+      - kwalletmanager5
+      - khelpcenter
+      - plasma-welcome
+      - kdebugsettings
+      - fcitx5 # מנוע קלט לשפות אסייתיות, אפשר להסיר.
+      - fcitx5-autostart
+
+  # התקנת Obsidian כ-Flatpak בצורה מובנית
+  - type: default-flatpaks
+    notify: false
+    system:
+      install:
+        - md.obsidian.Obsidian
 
   - type: script
     scripts:
+      - set-defaults.sh # סקריפט המקלדת שהוספנו
       - install-zayit.sh
       - hermetic-lock.sh
       - create-shortcut.sh

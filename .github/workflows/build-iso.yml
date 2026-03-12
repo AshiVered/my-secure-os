@@ -30,12 +30,12 @@ jobs:
         id: build
         with:
           arch: x86_64
-          image_name: ashi-secure-os
+          image_name: roseiteos
           image_repo: ghcr.io/ashivered
           image_tag: 43
           version: 43
           variant: Kinoite
-          iso_name: ashi-secure-os-offline.iso
+          iso_name: roseiteos-offline.iso
           iso_type: offline # הפקודה שיוצרת את ההתקנה הסגורה
 
       - name: Upload ISO as Artifact
