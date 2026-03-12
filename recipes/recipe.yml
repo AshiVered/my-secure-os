@@ -2,7 +2,7 @@
 name: ashi-secure-os
 description: A completely hermetic, terminal-free, secure study system.
 base-image: ghcr.io/ublue-os/kinoite-main
-image-version: 40
+image-version: 43
 
 modules:
   - type: rpm-ostree
