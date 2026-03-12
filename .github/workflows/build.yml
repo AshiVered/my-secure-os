@@ -19,7 +19,6 @@ jobs:
       - name: Build Custom Image
         uses: blue-build/github-action@v1
         with:
-          # כאן אנחנו שמים רק את שם הקובץ, המערכת כבר מחפשת בתוך תיקיית recipes
-          recipe: recipe.yml 
+          recipe: recipe.yml
           registry_token: ${{ github.token }}
           build_opts: "--no-sign"

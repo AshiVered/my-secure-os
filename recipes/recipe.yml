@@ -1,14 +1,15 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: ashi-secure-os
 description: A completely hermetic, terminal-free, secure study system.
-base-image: fedora-kinoite:40
-image-version: 40 # חובה להוסיף את השורה הזו
+base-image: ghcr.io/blue-build/base-images/fedora-kinoite
+image-version: 40
 
 modules:
   - type: script
     scripts:
       - install-zayit.sh
 
-  - type: rpm-ostree # מודול יציב יותר עבור פדורה אטומית
+  - type: rpm-ostree
     install:
       - fsearch
       - onlyoffice-desktopeditors
