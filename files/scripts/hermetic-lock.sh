@@ -37,8 +37,8 @@ chmod a-s /usr/bin/sudo
 chmod a-s /usr/bin/su
 
 # 1. Restrict permission management to ROOT ONLY (prevents users from making files executable)
-chmod 700 /usr/bin/chmod
-chmod 700 /usr/bin/setfacl
+# chmod 700 /usr/bin/chmod
+# chmod 700 /usr/bin/setfacl
 
 # 2. Restrict Flatpak management tools to ROOT ONLY (keeps the engine running for the OS)
 chmod 700 /usr/bin/flatpak
